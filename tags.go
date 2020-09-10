@@ -21,24 +21,6 @@ func getTags() (tags []*ec2.TagDescription) {
 	metadata := ec2metadata.New(sess)
 
 	if !metadata.Available() {
-		// DEBUG
-		tags = []*ec2.TagDescription{
-			&ec2.TagDescription{
-				Key:   aws.String("cwl:StuffLogs"),
-				Value: aws.String("C:/Program Files/Stuff"),
-			},
-			&ec2.TagDescription{
-				Key:   aws.String("cwl:MoreLogs"),
-				Value: aws.String("/abc/123/456"),
-			},
-			&ec2.TagDescription{
-				Key:   aws.String("cwl:Sudo"),
-				Value: aws.String("/var/log/sudo"),
-			},
-		}
-		return
-		// END DEBUG
-
 		log.Fatal("EC2 Metadata is not available... Are we running on an EC2 instance?")
 	}
 
