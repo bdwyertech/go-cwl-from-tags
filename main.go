@@ -85,19 +85,6 @@ func main() {
 		if err := json.Unmarshal(logFilesJson, &LogsFromConfig); err != nil {
 			log.Fatal(err)
 		}
-
-		// log.Fatal(logFiles)
-
-		//		values := jsonParsed.Path("logs.logs_collected.files.collect_list").Data() //.([]CwlLogFile)
-		//		for _, v := range jsonParsed.Path("logs.logs_collected.files.collect_list").Children() {
-		//			fmt.Println(v.Data().(CwlLogFile))
-		//			// v.(CwlLogFile)
-		//		}
-		//		//for _, v := range values {
-		//		//	v.(CwlLogFile)
-		//		//	log.Fatal(v)
-		//		//}
-		//		log.Error(values)
 	}
 
 	modified := false
@@ -118,48 +105,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		//if strings.HasPrefix(*tag.Key, "cwl:") {
-		//	f := CwlLogFile{
-		//		Encoding:     "utf-8",
-		//		FilePath:     *tag.Value,
-		//		LogGroupName: fmt.Sprintf("/aws/ec2/%s", lgfriendly.Replace(strings.TrimPrefix(*tag.Value, "/"))),
-		//	}
-		//
-		//			err = jsonParsed.ArrayAppend(f, "logs", "logs_collected", "files", "collect_list")
-		//			if err != nil {
-		//				log.Fatal(err)
-		//			}
-		//		}
 	}
-
-	//	f := CwlLogFile{
-	//		Encoding:     "utf-8",
-	//		FilePath:     "/a/b/c",
-	//		LogGroupName: "/aws/ec2/a/b/c",
-	//	}
-	//
-	//	err = jsonParsed.ArrayAppend(f, "logs", "logs_collected", "files", "collect_listt")
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-
-	//	gObj, err := jsonParsed.JSONPointer("/logs/logs_collected/files/collect_listt")
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//	log.Println(gObj)
-
-	// []CwlLogFile{}
-	// c := []CwlLogFile{}
-
-	// jsonParsed.Set(30, "crap", "logs_collected", "files", "collect_list")
-
-	//
-	//  "logs": {
-	//    "logs_collected": {
-	//      "files": {
-	//        "collect_list": [
 
 	if modified {
 		fmt.Println(jsonParsed.StringIndent("", "  "))
