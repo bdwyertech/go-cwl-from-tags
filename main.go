@@ -100,6 +100,7 @@ func main() {
 		//		log.Error(values)
 	}
 
+	modified := false
 	for _, logFile := range LogsFromTags {
 		preExisting := false
 		for _, logFromConfig := range LogsFromConfig {
@@ -111,6 +112,7 @@ func main() {
 			log.Println("pre-existing")
 			continue
 		}
+		modified = true
 
 		err = jsonParsed.ArrayAppend(logFile, "logs", "logs_collected", "files", "collect_list")
 		if err != nil {
@@ -159,7 +161,11 @@ func main() {
 	//      "files": {
 	//        "collect_list": [
 
-	fmt.Println(jsonParsed.StringIndent("", "  "))
+	if modified {
+		fmt.Println(jsonParsed.StringIndent("", "  "))
 
-	ioutil.WriteFile("rendered.json", []byte(jsonParsed.StringIndent("", "  ")), 0644)
+		ioutil.WriteFile(cwlConfigFile, []byte(jsonParsed.StringIndent("", "  ")), 0644)
+
+		RestartService()
+	}
 }
