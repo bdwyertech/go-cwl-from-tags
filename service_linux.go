@@ -44,7 +44,9 @@ func restartSystemD(service string) (healthy bool, err error) {
 	}
 	defer m.Close()
 
-	s, err := m.GetAllProperties(service)
+	serviceUnit := fmt.Sprintf("%v.service", service)
+
+	s, err := m.GetAllProperties(serviceUnit)
 	if err != nil {
 		log.Errorf("Could not open service %v: %v", service, err)
 		return
@@ -56,7 +58,17 @@ func restartSystemD(service string) (healthy bool, err error) {
 			healthy = false
 		}
 	}
-	m.ReloadOrRestartUnit(service, "replace")
+
+	reschan := make(chan string)
+	_, err = m.ReloadOrRestartUnit(serviceUnit, "replace", reschan)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	job := <-reschan
+	if job != "done" {
+		log.Fatal("Job is not done:", job)
+	}
 
 	return
 }
@@ -68,11 +80,12 @@ func restartSysV(service string) (healthy bool, err error) {
 
 	cmd := exec.CommandContext(ctx, "service", service, "status")
 	out, err := cmd.CombinedOutput()
+	output := strings.TrimSpace(string(out))
 	if err != nil {
 		if ctxErr := ctx.Err(); ctxErr == context.DeadlineExceeded {
 			log.Errorf("Command timed out: %v", cmd.String())
 		} else {
-			log.Errorf("%v failed: %v, %v", cmd.String(), err, strings.TrimSpace(string(out)))
+			log.Errorf("%v failed: %v, %v", cmd.String(), err, output)
 			return
 		}
 	}
